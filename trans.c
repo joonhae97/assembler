@@ -16,6 +16,7 @@ int instr_trans(char *op, char *args, char* mcode)
 	/******tokenizing******/
 	src.op = strtok(args, ",");
 	dest.op = strtok(NULL, ",");
+
 	/*******src set type**************/
 	if(src.op[0]=='$') src.type = imm; 
         else if(src.op[0]=='%') src.type = reg;
@@ -25,7 +26,7 @@ int instr_trans(char *op, char *args, char* mcode)
                 else src.type = mem_disp;
         }
         else if(src.op[0]=='(') src.type = mem_rel;
-	/********************************/
+	/*******************************/
 
 	/*********dest set type***********/
 	if(dest.op[0]=='$') dest.type = imm; 
@@ -37,7 +38,7 @@ int instr_trans(char *op, char *args, char* mcode)
         }
         else if(dest.op[0]=='(') dest.type = mem_rel;
 
-	/*********************************/
+	/********************************/
 	if(src.type == reg){
 		//1. reg to reg
 		if(dest.type == reg) strcpy(mcode,"89");
