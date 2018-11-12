@@ -10,35 +10,62 @@ int instr_trans(char *op, char *args, char* mcode)
 
 
 	strcpy(mcode, "AB CD EF");
-	
-	char *src;
-	char *dest;
-	src = strtok(args, ",");
-	dest = strtok(NULL, ",");
-	
-	if(src[0]=='%'){
+		
+	data src;
+	data dest;
+	/******tokenizing******/
+	src.op = strtok(args, ",");
+	dest.op = strtok(NULL, ",");
+	/*******src set type**************/
+	if(src.op[0]=='$') src.type = imm; 
+        else if(src.op[0]=='%') src.type = reg;
+        else if(src.op[0]=='-') src.type = mem_disp;
+        else if(src.op[0]=='0'){
+                if(strchr(src.op, '(')==NULL) src.type = mem_abs;
+                else src.type = mem_disp;
+        }
+        else if(src.op[0]=='(') src.type = mem_rel;
+	/********************************/
+
+	/*********dest set type***********/
+	if(dest.op[0]=='$') dest.type = imm; 
+        else if(dest.op[0]=='%') dest.type = reg;
+        else if(dest.op[0]=='-') dest.type = mem_disp;
+        else if(dest.op[0]=='0'){
+                if(strchr(dest.op, '(')==NULL) dest.type = mem_abs;
+                else dest.type = mem_disp;
+        }
+        else if(dest.op[0]=='(') dest.type = mem_rel;
+
+	/*********************************/
+	if(src.type == reg){
 		//1. reg to reg
-		if(dest[0]=='%') strcpy(mcode,"89");
+		if(dest.type == reg) strcpy(mcode,"89");
 		//5. reg(eax) to mem
-		else if(dest[0]=='0') strcpy(mcode, "a3");
+		else if(dest.type==mem_abs||dest.type==mem_rel||dest.type==mem_disp) strcpy(mcode, "a3");
 	}
 	//6. immediate to reg
-	else if(src[0]=='$'){
-		if(strcmp(dest, "%eax")==0) strcpy(mcode,"b8");
-		else if(strcmp(dest, "%ecx")==0) strcpy(mcode, "b9");
-		else if(strcmp(dest, "%edx")==0) strcpy(mcode, "ba");
-		else if(strcmp(dest, "%ebx")==0) strcpy(mcode, "bb");
-		else if(strcmp(dest, "%esp")==0) strcpy(mcode, "bc");
-		else if(strcmp(dest, "%ebp")==0) strcpy(mcode, "bd");
-		else if(strcmp(dest, "%esi")==0) strcpy(mcode, "be");
-		else if(strcmp(dest, "%edi")==0) strcpy(mcode, "bf");
+	else if(src.type == imm){
+		if(strcmp(dest.op, "%eax")==0) strcpy(mcode,"b8");
+		else if(strcmp(dest.op, "%ecx")==0) strcpy(mcode, "b9");
+		else if(strcmp(dest.op, "%edx")==0) strcpy(mcode, "ba");
+		else if(strcmp(dest.op, "%ebx")==0) strcpy(mcode, "bb");
+		else if(strcmp(dest.op, "%esp")==0) strcpy(mcode, "bc");
+		else if(strcmp(dest.op, "%ebp")==0) strcpy(mcode, "bd");
+		else if(strcmp(dest.op, "%esi")==0) strcpy(mcode, "be");
+		else if(strcmp(dest.op, "%edi")==0) strcpy(mcode, "bf");
 	}
 		
-
-	//3. mem to reg(disp)
-	else if((src[0]=='-'||src[0]=='0')&&(strchr(src, '(')!=NULL))
-		strcpy(mcode, "8b");
-
-	else if(src[0]=='0'&&strcmp(dest, "%eax")==0) strcpy(mcode, "a1");
+	else if(dest.type == reg){
+		//3.mem(disp) to reg
+		if(src.type == mem_disp) strcpy(mcode, "8b");
+		else{
+			//4. mem to reg(eax)
+			if(strcmp(dest.op, "%eax")==0) strcpy(mcode, "a1");
+			//2. mem to reg
+			else strcpy(mcode, "8b");
+		}
+	}
 	return 1;	
 }
+

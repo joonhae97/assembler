@@ -3,8 +3,8 @@
 #include<stdlib.h>
 
 // complete this header file
-typedef enum{reg, mem_abs, mem_rel, mem_disp, imm} type;
+typedef enum what{reg, mem_abs, mem_rel, mem_disp, imm} what;
 typedef struct data{
-	char op; 
-	type ty;
-}
+	char* op; 
+	what type;//mem or reg
+}data;
