@@ -8,3 +8,6 @@ typedef struct data{
 	char* op; 
 	what type;//mem or reg
 }data;
+
+int instr_trans(char *op, char *args, char *mcode);
+int is_valid(char *op, char *args);
