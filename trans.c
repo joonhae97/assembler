@@ -10,15 +10,9 @@ int instr_trans(char *op, char *args, char* mcode)
 
 
 	strcpy(mcode, "AB CD EF");
-
-	/********************************/
-    /*  							*/
-	/*    generate machine code     */
-    /*  							*/
-	/********************************/
 	
-	char src[20];
-	char dest[20];
+	char *src;
+	char *dest;
 	src = strtok(args, ",");
 	dest = strtok(NULL, ",");
 	
@@ -41,7 +35,10 @@ int instr_trans(char *op, char *args, char* mcode)
 	}
 		
 
-	//
+	//3. mem to reg(disp)
+	else if((src[0]=='-'||src[0]=='0')&&(strchr(src, '(')!=NULL))
+		strcpy(mcode, "8b");
 
+	else if(src[0]=='0'&&strcmp(dest, "%eax")==0) strcpy(mcode, "a1");
 	return 1;	
 }

@@ -10,7 +10,7 @@ int is_valid(char *op, char *args)
 	/*         syntax check         */
     /*  							*/
 	/********************************/
-	if(strcmp(op, "mov")!=0) return 0;
+/*	if(strcmp(op, "mov")!=0) return 0;
 	else{
 		int count =1;
 		char *ptr = strtok(args, ",");
@@ -24,6 +24,6 @@ int is_valid(char *op, char *args)
 			
 		}
 
-	} 	
+	} */	
 	return 1;
 }
